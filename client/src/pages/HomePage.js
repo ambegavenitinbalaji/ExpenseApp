@@ -5,6 +5,7 @@ import Layout from '../components/Layout/Layout'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
 import moment from 'moment'
+import Analytics from '../components/Analytics'
 const { RangePicker } = DatePicker
 
 const HomePage = () => {
@@ -107,17 +108,15 @@ const HomePage = () => {
           {frequency === "custom" && <RangePicker value={selectedDate} onChange={(values) => setSelectedDate(values)} />}
         </div>
         <div className='switch-icon'>
-            <UnorderedListOutlined className={`mx-3 ${viewData === 'table' ? 'active-icon' : ''}`} onClick={() => setViewData('table')}/>
-            <AreaChartOutlined className='mx-3' onClick={() => setViewData('analytics')}/>
-          </div>
+          <UnorderedListOutlined className={`mx-3 ${viewData === 'table' ? 'active-icon' : 'inactive-icon'}`} onClick={() => setViewData('table')} />
+          <AreaChartOutlined className={`mx-3 ${viewData === 'analytics' ? 'active-icon' : 'inactive-icon'}`} onClick={() => setViewData('analytics')} />
+        </div>
         <div>
           <button className='btn btn-primary' onClick={() => setShowModal(true)}>Add New</button>
         </div>
       </div>
       <div className="content">
-        <Table columns={columns} dataSource={allTransaction}>
-
-        </Table>
+        {viewData === 'table' ? <Table columns={columns} dataSource={allTransaction} /> : (<Analytics allTransaction = {allTransaction}/>)}
       </div>
       <Modal title="Add Transaction" open={showModal} onCancel={() => setShowModal(false)} footer={false}>
         <Form layout="vertical" onFinish={handleSubmit}>
@@ -135,12 +134,7 @@ const HomePage = () => {
               <Select.Option value="salary">Salary</Select.Option>
               <Select.Option value="foods">Foods</Select.Option>
               <Select.Option value="transportation">Transportation</Select.Option>
-              <Select.Option value="housing">Housing
-                <Select>
-                  <Select.Option value="rent">Rent</Select.Option>
-                  <Select.Option value="utilities">Utilities</Select.Option>
-                </Select>
-              </Select.Option>
+              <Select.Option value="housing">Housing</Select.Option>
               <Select.Option value="personal Care">Personal Care</Select.Option>
               <Select.Option value="health and wellness">Health and Wellness</Select.Option>
               <Select.Option value="entertainment">Entertainment</Select.Option>
